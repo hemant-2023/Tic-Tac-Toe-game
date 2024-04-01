@@ -1,0 +1,96 @@
+
+/*this is a tic tac toe game*/
+#include <iostream>
+
+using namespace std;
+
+// Function prototypes
+void displayBoard(char board[][3]);
+bool checkWin(char board[][3], char marker);
+bool checkDraw(char board[][3]);
+bool isValidMove(char board[][3], int row, int col);
+void makeMove(char board[][3], char marker, int row, int col);
+
+int main() {
+    char board[3][3] = {{' ', ' ', ' '}, {' ', ' ', ' '}, {' ', ' ', ' '}};
+
+    cout << "Welcome to Tic-Tac-Toe!" << endl;
+    cout << "Player 1: X  Player 2: O" << endl;
+
+    int currentPlayer = 1;
+    bool gameover = false;
+
+    while (!gameover) {
+        displayBoard(board);
+
+        int row, col;
+        cout << "Player " << currentPlayer << ", enter your move (row col): ";
+        cin >> row >> col;
+
+        if (isValidMove(board, row, col)) {
+            char marker = (currentPlayer == 1) ? 'X' : 'O';
+            makeMove(board, marker, row, col);
+
+            if (checkWin(board, marker)) {
+                displayBoard(board);
+                cout << "Player " << currentPlayer << " wins!" << endl;
+                gameover = true;
+            } else if (checkDraw(board)) {
+                displayBoard(board);
+                cout << "It's a draw!" << endl;
+                gameover = true;
+            } else {
+                currentPlayer = (currentPlayer == 1) ? 2 : 1;
+            }
+        } else {
+            cout << "Invalid move. Please try again." << endl;
+        }
+    }
+
+    return 0;
+}
+
+void displayBoard(char board[][3]) {
+    cout << "   0 1 2" << endl;
+    cout << "  -------" << endl;
+    for (int i = 0; i < 3; ++i) {
+        cout << i << " | ";
+        for (int j = 0; j < 3; ++j) {
+            cout << board[i][j] << " ";
+        }
+        cout << endl;
+    }
+    cout << endl;
+}
+
+bool checkWin(char board[][3], char marker) {
+    // Check rows, columns, and diagonals for a win
+    for (int i = 0; i < 3; ++i) {
+        if (board[i][0] == marker && board[i][1] == marker && board[i][2] == marker) return true; // Rows
+        if (board[0][i] == marker && board[1][i] == marker && board[2][i] == marker) return true; // Columns
+    }
+    if (board[0][0] == marker && board[1][1] == marker && board[2][2] == marker) return true; // Diagonal
+    if (board[0][2] == marker && board[1][1] == marker && board[2][0] == marker) return true; // Diagonal
+    return false;
+}
+
+bool checkDraw(char board[][3]) {
+    // Check if the board is full (draw)
+    for (int i = 0; i < 3; ++i) {
+        
+        for (int j = 0; j < 3; ++j) {
+            if (board[i][j] == ' ') return false; // If any cell is empty, game is not a draw
+        }
+    }
+    return true; // All cells are filled, game is a draw
+}
+
+bool isValidMove(char board[][3], int row, int col) {
+    // Check if the chosen cell is empty and within the board boundaries
+    return (row >= 0 && row < 3 && col >= 0 && col < 3 && board[row][col] == ' ');
+}
+
+void makeMove(char board[][3], char marker, int row, int col) {
+    // Place the marker at the specified row and column
+    board[row][col] = marker;
+}
